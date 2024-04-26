@@ -22,12 +22,12 @@ export default function ArrowLink(props) {
             !hideCircle ? "border-[#5BA446]" : "border-transparent"
           }`}
         >
-          <div className="flex flex-col absolute -top-1 right-6 rotate-90">
+          <div className="flex items-center absolute top-2 right-2">
             <div className="w-[6px] h-[6px]  bg-[#5BA446] rounded-full"></div>
-            <SmallRec rotate="" />
+            <div className="w-8 h-[2px] bg-[#5BA446]"></div>
           </div>
         </CircleBorder>
-        <div className="text-[14px]">{title}</div>
+        <div className="text-[14px] font-iranMedium">{title}</div>
       </a>
     </Link>
   );

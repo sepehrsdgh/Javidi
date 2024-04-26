@@ -7,6 +7,21 @@ import { allDetail, allP } from "../utils/officeData";
 import StepCard from "../components/cards/StepCard";
 import FourSteps from "../components/MainPage/FourSteps";
 import AboutUsSec from "../components/MainPage/AboutUsSec";
+import FinalProjectCard from "../components/cards/FinalProjectCard/FinalProjectCard";
+import AllProjects from "../components/MainPage/AllProjects";
+import BlackStatictsCard from "../components/cards/BlackStatictsCard";
+import Statics from "../components/MainPage/Statics";
+import WhyUsCard from "../components/cards/WhyUsCard";
+import WhyUsCards from "../components/MainPage/WhyUs/WhyUsCards";
+import FinalWhyUs from "../components/MainPage/WhyUs/FinalWhyUs";
+import ProjectCard from "../components/cards/FinalProjectCard/ProjectCard";
+import BlogCard from "../components/cards/BlogCard";
+import ImageAbove from "../components/layout/ImageAbove";
+import AllBlog from "../components/MainPage/AllBlog";
+import Icon from "../components/shapes/Icon";
+import Footer from "../components/layout/Footer";
+import { BoxRemove, CloseCircle } from "iconsax-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,6 +29,11 @@ export default function Home() {
       <TopSection />
       <FourSteps />
       <AboutUsSec />
+      <AllProjects />
+      <Statics />
+      <FinalWhyUs />
+      <AllBlog />
+      <Footer />
     </div>
   );
 }

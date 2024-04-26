@@ -13,13 +13,13 @@ export default function WhyUsCard(props) {
             <div>01</div>
             <div></div>
           </div>
-          <div className="text-[32px]">{title}</div>
+          <div className="text-[32px] font-iranUltraLight">{title}</div>
         </div>
         <div className="flex flex-col items-center justify-center w-[41.8px] h-[41.8px] text-[40px] text-[#5BA446] border-2 border-[#5BA446] rounded-full">
           <span className="-mt-2 cursor-pointer">+</span>
         </div>
       </div>
-      <div className="text-[21px] text-[#54595F] mr-8">{subTitle}</div>
+      <div className="text-[21px] text-[#54595F] font-iranBold mr-8">{subTitle}</div>
     </div>
   );
 }
