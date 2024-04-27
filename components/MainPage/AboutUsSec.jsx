@@ -1,6 +1,7 @@
 import React from "react";
 import GreenBesideBlack from "../text/GreenBesideBlack";
 import { allP } from "../../utils/officeData";
+import ArrowLink from "../shapes/ArrowLink";
 
 export default function AboutUsSec() {
   return (
@@ -18,6 +19,9 @@ export default function AboutUsSec() {
         </div>
       </div>
       <img src="/sketch.jpg" />
+      <div>
+        <ArrowLink {...{ href: "/", wrapperClass: "mr-0" }} />
+      </div>
     </div>
   );
 }

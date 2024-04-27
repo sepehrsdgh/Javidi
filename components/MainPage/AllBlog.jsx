@@ -2,6 +2,7 @@ import React from "react";
 import GreenBesideBlack from "../text/GreenBesideBlack";
 import ImageAbove from "../layout/ImageAbove";
 import BlogCard from "../cards/BlogCard";
+import ArrowLink from "../shapes/ArrowLink";
 
 export default function AllBlog() {
   return (
@@ -16,8 +17,11 @@ export default function AllBlog() {
         <ImageAbove {...{ component: <BlogCard /> }} />
         <ImageAbove {...{ component: <BlogCard /> }} />
       </div>
-      <div className="text-[#5BA446] text-center mt-16 text-[20px]">
-        مشاهده همه مقالات
+      <div className="my-20 flex flex-col items-center justify-center">
+        <ArrowLink
+          wrapperClass="mr-0 mt-8"
+          {...{ title: "مشاهده همه مقالات" }}
+        />
       </div>
     </div>
   );

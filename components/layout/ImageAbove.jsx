@@ -2,7 +2,8 @@ import React from "react";
 import ProjectCard from "../cards/FinalProjectCard/ProjectCard";
 
 export default function ImageAbove(props) {
-  const { src = "/HeaderImage.jpeg", component = <ProjectCard /> } = props;
+  const { src = "/HeaderImage.jpeg", component = <ProjectCard {...props} /> } =
+    props;
   return (
     <div className="relative">
       <div className="h-72 overflow-hidden">

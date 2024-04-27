@@ -22,18 +22,22 @@ import Icon from "../components/shapes/Icon";
 import Footer from "../components/layout/Footer";
 import { BoxRemove, CloseCircle } from "iconsax-react";
 import Link from "next/link";
+import BetaHead from "../components/layout/BetaHead";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-8">
-      <TopSection />
-      <FourSteps />
-      <AboutUsSec />
-      <AllProjects />
-      <Statics />
-      <FinalWhyUs />
-      <AllBlog />
-      <Footer />
-    </div>
+    <>
+      <BetaHead title="صفحه اصلی " />
+      <div className="flex flex-col gap-8">
+        <TopSection />
+        <FourSteps />
+        <AboutUsSec />
+        <AllProjects />
+        <Statics />
+        <FinalWhyUs />
+        <AllBlog />
+        <Footer />
+      </div>
+    </>
   );
 }

@@ -1,12 +1,13 @@
 import React from "react";
 import WhyUsCard from "../../cards/WhyUsCard";
+import { allws } from "../../../utils/officeData";
 
 export default function WhyUsCards() {
   return (
     <div className="flex flex-col gap-3">
-      <WhyUsCard />
-      <WhyUsCard />
-      <WhyUsCard />
+      {allws.map((ele, i) => (
+        <WhyUsCard {...ele} i={i} />
+      ))}
     </div>
   );
 }
