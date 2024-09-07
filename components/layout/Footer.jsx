@@ -10,10 +10,14 @@ export default function Footer() {
     <div className="flex flex-col gap-4 items-center bg-[#212529] pt-[105px] pb-[20px]">
       <Image src="/logo.png" width={150} height={300} />
       <div className="flex items-center gap-4 mt-4">
-        {allSocial.map((ele) => {
+        {allSocial.map((ele, i) => {
           const Icon = ele.icon;
           return (
-            <a href={ele.subTitle} className="bg-white p-2 rounded-full">
+            <a
+              key={i}
+              href={ele.subTitle}
+              className="bg-white p-2 rounded-full"
+            >
               {<Icon size={16} />}
             </a>
           );
@@ -22,8 +26,8 @@ export default function Footer() {
       <div className="grid grid-cols-3 gap-4 ">
         {allData
           .filter((ele, i) => i != 2)
-          .map((ele) => (
-            <Link legacyBehavior href={ele.icon}>
+          .map((ele, i) => (
+            <Link key={i} legacyBehavior href={ele.icon}>
               <a className="text-white font-iranLight">{ele.title}</a>
             </Link>
           ))}
@@ -32,8 +36,8 @@ export default function Footer() {
         شرکت ساختمانی و تاسیساتی فرمی دیراک
       </div>
       <div className="flex flex-col gap-4 mt-3">
-        {addresses.map((ele) => (
-          <FotterInfo {...ele} />
+        {addresses.map((ele,i) => (
+          <FotterInfo key={i} {...ele} />
         ))}
       </div>
     </div>

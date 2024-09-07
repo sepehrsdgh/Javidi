@@ -6,7 +6,7 @@ export default function WhyUsCards() {
   return (
     <div className="flex flex-col gap-3">
       {allws.map((ele, i) => (
-        <WhyUsCard {...ele} i={i} />
+        <WhyUsCard {...ele} key={i} i={i} />
       ))}
     </div>
   );

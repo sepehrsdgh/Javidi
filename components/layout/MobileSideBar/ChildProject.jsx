@@ -37,8 +37,8 @@ export default function ChildProject(props) {
       </div>
       {isOpen && (
         <div className="flex font-iranBold flex-col gap-2 pr-2 mt-2">
-          {hrefs.map((ele) => (
-            <Link legacyBehavior href={ele.href}>
+          {hrefs.map((ele, i) => (
+            <Link key={i} legacyBehavior href={ele.href}>
               <a>{ele.title}</a>
             </Link>
           ))}

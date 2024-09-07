@@ -14,7 +14,7 @@ export default function AllProjects() {
         />
         <div className="flex flex-col gap-20">
           {allProjects.map((ele, i) => (
-            <FinalProjectCard {...ele} index={i} />
+            <FinalProjectCard key={i} {...ele} index={i} />
           ))}
         </div>
         <div className="my-20 flex flex-col items-center justify-center">

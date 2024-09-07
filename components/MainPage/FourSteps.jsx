@@ -13,6 +13,7 @@ export default function FourSteps() {
         <div className="grid grid-cols-2 gap-4">
           {allDetail.map((ele, i) => (
             <StepCard
+              key={i}
               {...{
                 title: ele.title,
                 subTitle: ele.subTitle,

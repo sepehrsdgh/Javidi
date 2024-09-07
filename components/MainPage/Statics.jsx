@@ -12,8 +12,8 @@ export default function Statics() {
       }}
       className="grid relative grid-cols-2 p-4 gap-[22.5px]"
     >
-      {allStats.map((ele) => (
-        <BlackStatictsCard {...ele} />
+      {allStats.map((ele, i) => (
+        <BlackStatictsCard key={i} {...ele} />
       ))}
     </div>
   );

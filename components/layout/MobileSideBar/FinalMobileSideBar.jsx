@@ -24,18 +24,19 @@ export default function FinalMobileSideBar() {
         <div className="flex flex-col gap-8 pr-4">
           <Image src="/logo.png" width={160} height={320} />
           <div className="flex flex-col gap-8 pr-4">
-            {allData.map((ele) => (
-              <Item {...ele} />
+            {allData.map((ele, i) => (
+              <Item key={i} {...ele} />
             ))}
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-2 items-center">
         <div className="flex items-center gap-4">
-          {allSocial.map((ele) => {
+          {allSocial.map((ele, i) => {
             const Icon = ele.icon;
             return (
               <a
+                key={i}
                 href={ele.subTitle}
                 className="border  border-black p-2 rounded-full"
               >

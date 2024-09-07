@@ -59,8 +59,8 @@ export default function Item(props) {
         </div>
       )}
       <div className="flex flex-col gap-4 pr-2 mt-2">
-        {child.map((ele) => (
-          <ChildProject {...{ title: ele.title, hrefs: ele.hrefs }} />
+        {child.map((ele, i) => (
+          <ChildProject key={i} {...{ title: ele.title, hrefs: ele.hrefs }} />
         ))}
       </div>
     </div>
