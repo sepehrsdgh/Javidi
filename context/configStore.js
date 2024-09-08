@@ -5,7 +5,7 @@ import inputSlice from "./slices/inputSlice";
 
 const reducer = combineReducers({
   layout: layoutSlice,
-  inptu: inputSlice,
+  input: inputSlice,
 });
 
 const store = configureStore({

@@ -1,3 +1,8 @@
+const {
+  addInputError,
+  deleteInputError,
+} = require("../../context/slices/inputSlice");
+
 const keyBoardEnum = {
   Enter: "Enter",
   Backspace: "Backspace",
@@ -50,6 +55,7 @@ class CatchyInput {
     this.label = label;
     this.maxLength = maxLength ? maxLength : "1";
     this.ReduxDispatch = ReduxDispatch;
+    this.finalValue;
   }
 
   inputIdMaker = (index = 0) => {
@@ -84,6 +90,7 @@ class DecimalInputHandler extends CatchyInput {
   }
 
   handleInputChange = (e, index, inputs, setInputs) => {
+    this.ReduxDispatch(deleteInputError({ id: this.id }));
     this.inputIdMaker(index);
     const value = e.target.value;
 
@@ -93,16 +100,39 @@ class DecimalInputHandler extends CatchyInput {
       setInputs(newInputs);
 
       if (value !== "." && index < this.inputCount - 1) {
-        document.getElementById(this.nextInputIdInGroup)?.focus();
+        this.goToNextInput();
       }
 
       if (value !== "." && index === this.inputCount - 1) {
-        document.getElementById(this.firstInputInNextGroup)?.focus();
+        this.goToNextGroup();
       }
     }
   };
 
+  goToNextInput = () => {
+    document.getElementById(this.nextInputIdInGroup)?.focus();
+  };
+
+  goToNextGroup = () => {
+    this.formatValue();
+    if (this.finalValue > 8) {
+      this.ReduxDispatch(
+        addInputError({ id: this.id, message: "out of range!" })
+      );
+    }
+    document.getElementById(this.firstInputInNextGroup)?.focus();
+  };
+
+  goToBeforeGroup = () => {
+    document.getElementById(this.firstInputINBeforeGroup)?.focus();
+  };
+
+  goToBeforeInput = () => {
+    document.getElementById(this.beforeNextInputIdIngroup)?.focus();
+  };
+
   handleKeyDown = (e, index, inputs, setInputs) => {
+    this.ReduxDispatch(deleteInputError({ id: this.id }));
     this.inputIdMaker(index);
     const newInputs = [...inputs];
     const format = e.target.dataset.format;
@@ -112,7 +142,7 @@ class DecimalInputHandler extends CatchyInput {
       if (e.target.value == "" && format == InputFormatEnum.Decimal) {
         this.autoFillDecimalValue();
       } else {
-        document.getElementById(this.firstInputInNextGroup)?.focus();
+        this.goToNextGroup();
       }
     }
 
@@ -121,20 +151,45 @@ class DecimalInputHandler extends CatchyInput {
       setInputs(newInputs);
 
       if (key === keyBoardEnum.Backspace && index > 0) {
-        document.getElementById(this.beforeNextInputIdIngroup)?.focus();
+        this.goToBeforeInput();
       } else if (index === 0) {
-        document.getElementById(this.firstInputINBeforeGroup)?.focus();
+        this.goToBeforeGroup();
       }
     }
 
     if (key === keyBoardEnum.ArrowLeft && index > 0) {
-      document.getElementById(this.beforeNextInputIdIngroup)?.focus();
+      this.goToBeforeInput();
     } else if (
       e.key === keyBoardEnum.ArrowRight &&
       index < this.inputCount - 1
     ) {
-      document.getElementById(this.nextInputIdInGroup)?.focus();
+      this.goToNextInput();
     }
+  };
+
+  formatValue = () => {
+    const allInputs = document.querySelectorAll(this.groupIdPattern);
+
+    let integerPart = "";
+    let decimalPart = "";
+
+    allInputs.forEach((input) => {
+      const format = input.dataset.format;
+      const value = input.value.trim();
+
+      if (format === InputFormatEnum.Decimal) {
+        decimalPart = value;
+      } else {
+        integerPart = value;
+      }
+    });
+
+    const finalValue =
+      this.decimalCount > 0
+        ? `${integerPart}.${decimalPart.padEnd(this.decimalCount, "0")}`
+        : integerPart;
+
+    this.finalValue = finalValue;
   };
 
   autoFillDecimalValue = () => {
@@ -178,7 +233,7 @@ class DecimalInputHandler extends CatchyInput {
         input.value = "0";
       }
     });
-    document.getElementById(this.firstInputInNextGroup)?.focus();
+    this.goToNextGroup();
   };
 }
 

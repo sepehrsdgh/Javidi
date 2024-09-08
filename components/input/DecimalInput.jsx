@@ -1,4 +1,5 @@
 import { forwardRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 const DecimalInput = (props) => {
   const {
@@ -47,10 +48,14 @@ const DecimalInput = (props) => {
     return inputFields;
   };
 
+  const inputErrors = useSelector((state) => state.input.inputError);
+  console.log(inputErrors, "test");
+
   return (
     <div className="flex items-center space-x-2 p-4">
       <label className="text-lg font-semibold">{label}:</label>
       {renderInputFields()}
+      {inputErrors.find((ele) => ele.id == id) && <div>58</div>}
     </div>
   );
 };
