@@ -1,37 +1,49 @@
 import React, { useRef } from "react";
-import DecimalInput from "../components/input/DecimalInput";
 import DropdownInput from "../components/input/DropDownInput";
+import DecimalInput from "../components/input/DecimalInput";
+import {
+  DecimalInputHandler,
+  DropDownInputHandler,
+} from "../components/input/input";
+import { useDispatch } from "react-redux";
 export default function TestInput() {
-  const arr = [useRef(), useRef(), useRef()];
-  const handleComplete = (currentIndex) => {
-    if (arr[currentIndex + 1]) {
-      arr[currentIndex + 1].current.focus();
-    }
-  };
-
-  const handleComeBack = (currentIndex) => {
-    if (arr[currentIndex - 1]) {
-      arr[currentIndex - 1].current.focus();
-    }
-  };
-  //must add default value
+  const dispatch = useDispatch();
+  const input1 = new DropDownInputHandler(
+    0,
+    ["Apple", "Banana", "Cherry", "Grapes", "Orange"],
+    null,
+    0,
+    "fruit:"
+  );
+  const input2 = new DecimalInputHandler(
+    1,
+    [0.0, 8.0],
+    /^\d$/,
+    1,
+    "ECV",
+    undefined,
+    3,
+    2,
+    dispatch
+  );
+  const input3 = new DecimalInputHandler(
+    2,
+    [0.0, 3.0],
+    /^\d$/,
+    2,
+    "MEP",
+    undefined,
+    4,
+    0,
+    dispatch
+  );
+  const allInput = [input2, input3];
   return (
     <form className="flex flex-col gap-4 p-4">
-      <DropdownInput ref={arr[0]} onComplete={() => handleComplete(0)} />
-      <DecimalInput
-        id={0}
-        ref={arr[1]}
-        onComplete={() => handleComplete(1)}
-        onComeBack={() => handleComeBack(1)}
-        tabIndex={1}
-      />
-      <DecimalInput
-        id={1}
-        ref={arr[2]}
-        onComplete={() => handleComplete(2)}
-        onComeBack={() => handleComeBack(2)}
-        tabIndex={2}
-      />
+      <DropdownInput {...input1} />
+      {allInput.map((ele, i) => (
+        <DecimalInput key={i} {...ele} />
+      ))}
     </form>
   );
 }
