@@ -30,6 +30,11 @@ const InputTypeEnum = {
 
 const InputFormatEnum = {
   Decimal: "decimal",
+  DropDown: "DropDown",
+};
+
+const InputErrorMessageEnum = {
+  outOfRange: "خارج از محدوده ی مجاز ",
 };
 
 class CatchyInput {
@@ -65,6 +70,8 @@ class CatchyInput {
     this.firstInputINBeforeGroup = `input-${this.id - 1}-${0}`;
     this.firstInputInNextGroup = `input-${this.id + 1}-${0}`;
     this.groupIdPattern = `[id^="input-${this.id}-"]`;
+    this.divErrorPattern = `.input-${this.id}-error`;
+    return this;
   };
 }
 
@@ -78,6 +85,7 @@ class DecimalInputHandler extends CatchyInput {
     maxLength,
     inputCount,
     decimalCount,
+    signed,
     ReduxDispatch
   ) {
     super(id, rangeValue, regex, tabIndex, label, maxLength, ReduxDispatch);
@@ -87,14 +95,27 @@ class DecimalInputHandler extends CatchyInput {
     this.regex = regex;
     this.tabIndex = tabIndex;
     this.type = InputTypeEnum.Text;
+    this.signed = signed;
+    this.inputType = InputFormatEnum.Decimal;
   }
 
   handleInputChange = (e, index, inputs, setInputs) => {
-    this.ReduxDispatch(deleteInputError({ id: this.id }));
+    this.hideError();
     this.inputIdMaker(index);
     const value = e.target.value;
 
-    if ((this.regex.test(value) || value === ".") && value.length === 1) {
+    if (
+      (this.regex.test(value) || (index == 0 && this.signed)) &&
+      value.length === 1
+    ) {
+      if (index == 0 && this.signed && value != "+" && value != "-") {
+        const newInputs = [...inputs];
+        newInputs[0] = "+";
+        newInputs[1] = value;
+        setInputs(newInputs);
+        this.goToNextInput();
+        return;
+      }
       const newInputs = [...inputs];
       newInputs[index] = value;
       setInputs(newInputs);
@@ -115,12 +136,12 @@ class DecimalInputHandler extends CatchyInput {
 
   goToNextGroup = () => {
     this.formatValue();
-    if (this.finalValue > 8) {
-      this.ReduxDispatch(
-        addInputError({ id: this.id, message: "out of range!" })
-      );
-    }
     document.getElementById(this.firstInputInNextGroup)?.focus();
+    const errorDiv = document.querySelector(this.divErrorPattern);
+    //must dynamic
+    if (this.validationCheck()) {
+      this.showError();
+    }
   };
 
   goToBeforeGroup = () => {
@@ -132,7 +153,7 @@ class DecimalInputHandler extends CatchyInput {
   };
 
   handleKeyDown = (e, index, inputs, setInputs) => {
-    this.ReduxDispatch(deleteInputError({ id: this.id }));
+    this.hideError();
     this.inputIdMaker(index);
     const newInputs = [...inputs];
     const format = e.target.dataset.format;
@@ -140,7 +161,7 @@ class DecimalInputHandler extends CatchyInput {
     if (key === keyBoardEnum.Enter) {
       e.preventDefault();
       if (e.target.value == "" && format == InputFormatEnum.Decimal) {
-        this.autoFillDecimalValue();
+        this.autoFillDecimalValue(index, newInputs, setInputs);
       } else {
         this.goToNextGroup();
       }
@@ -190,25 +211,26 @@ class DecimalInputHandler extends CatchyInput {
         : integerPart;
 
     this.finalValue = finalValue;
+    return this;
   };
 
-  autoFillDecimalValue = () => {
+  autoFillDecimalValue = (index, newInputs, setInputs) => {
     const allInputs = document.querySelectorAll(this.groupIdPattern);
     const nonDecimalInputs = [];
     const decimalInputs = [];
 
-    allInputs.forEach((input) => {
+    allInputs.forEach((input, index) => {
       const format = input.dataset.format;
       if (format === InputFormatEnum.Decimal) {
-        decimalInputs.push(input);
+        decimalInputs.push({ index, data: input });
       } else {
-        nonDecimalInputs.push(input);
+        nonDecimalInputs.push({ index, data: input });
       }
     });
 
     nonDecimalInputs.forEach((input) => {
-      if (input.value.trim() === "") {
-        const groupId = input.id.split("-").slice(0, -1).join("-");
+      if (input.data.value.trim() === "") {
+        const groupId = input.data.id.split("-").slice(0, -1).join("-");
         const groupDecimalInputs = decimalInputs.filter((decimalInput) =>
           decimalInput.id.startsWith(groupId)
         );
@@ -223,17 +245,41 @@ class DecimalInputHandler extends CatchyInput {
             }
           });
         }
-
-        input.value = "0";
+        input.data.value = "0";
       }
     });
 
     decimalInputs.forEach((input) => {
-      if (input.value.trim() === "") {
-        input.value = "0";
+      if (input.data.value.trim() === "") {
+        input.data.value = "0";
+        newInputs[input.index] = "0";
+        setInputs(newInputs);
       }
     });
     this.goToNextGroup();
+  };
+
+  validationCheck = () => {
+    const [min, max] = this.rangeValue;
+    return this.finalValue < min || this.finalValue > max;
+  };
+
+  showError = () => {
+    const errorDiv = document.querySelector(this.divErrorPattern);
+    //must correct format of validation and add []
+    errorDiv.innerHTML = InputErrorMessageEnum.outOfRange + this.rangeValue;
+    if (errorDiv && errorDiv.classList.contains("opacity-0")) {
+      errorDiv.classList.remove("opacity-0");
+      errorDiv.classList.add("opacity-100");
+    }
+  };
+
+  hideError = () => {
+    const errorDiv = document.querySelector(this.divErrorPattern);
+    if (errorDiv && errorDiv.classList.contains("opacity-100")) {
+      errorDiv.classList.remove("opacity-100");
+      errorDiv.classList.add("opacity-0");
+    }
   };
 }
 
@@ -245,6 +291,7 @@ class DropDownInputHandler extends CatchyInput {
     this.tabIndex = tabIndex;
     this.type = InputTypeEnum.Text;
     this.label = label;
+    this.inputType = InputFormatEnum.DropDown;
   }
 
   afterSelect = () => {

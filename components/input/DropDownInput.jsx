@@ -1,7 +1,15 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 
 const DropdownInput = (props) => {
-  const { onComplete, afterSelect, id, i = 0, tabIndex, rangeValue } = props;
+  const {
+    onComplete,
+    afterSelect,
+    id,
+    i = 0,
+    tabIndex,
+    rangeValue,
+    label,
+  } = props;
   const [selectedValue, setSelectedValue] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleSelect = (value) => {
@@ -14,21 +22,39 @@ const DropdownInput = (props) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative flex items-center gap-2  w-64 p-4">
+    <div
+      ref={dropdownRef}
+      className="relative flex items-center gap-2  w-64 p-4"
+    >
       <label
         id={`input-${id}-${i}`}
         className="text-lg font-semibold cursor-pointer mb-2"
         onClick={toggleDropdown}
         tabIndex={tabIndex}
       >
-        Fruit:
+        {label} :
       </label>
       <div
         className="w-full p-2 border border-gray-300 rounded-md bg-gray-50 cursor-pointer"
         onClick={toggleDropdown}
       >
-        {selectedValue || "Select a fruit"}
+        {selectedValue || `Select a ${label}`}
       </div>
       {isDropdownOpen && (
         <ul className="absolute w-full bg-white border border-gray-300 rounded-md mt-2 z-10">
