@@ -1,8 +1,3 @@
-const {
-  addInputError,
-  deleteInputError,
-} = require("../../context/slices/inputSlice");
-
 const keyBoardEnum = {
   Enter: "Enter",
   Backspace: "Backspace",
@@ -114,6 +109,7 @@ class DecimalInputHandler extends CatchyInput {
         newInputs[0] = "+";
         newInputs[1] = value;
         setInputs(newInputs);
+        this.inputIdMaker(1);
         this.goToNextInput();
         return;
       }
@@ -326,9 +322,7 @@ class DropDownInputHandler extends CatchyInput {
   formatValue = () => {
     const dynamicId = `select-input-${this.id}-0`;
     const divElement = document.getElementById(dynamicId);
-    console.log(divElement);
     this.finalValue = divElement.getAttribute("data-value");
-    console.log(this.finalValue);
     if (this.validationCheck()) {
       this.showError();
       this.finalValue = undefined;
