@@ -4,7 +4,7 @@ import Tympanometry from "./tympanometry";
 
 function ModalController({ toggleModal }) {
   const [modalIndex, setModalIndex] = useState(0);
-  const modals = [<Tympanometry toggleModal={toggleModal} />];
+  const modals = [<Tympanometry toggleModal={toggleModal} key={1} />];
   const closeModal = (e) => {
     if (e.target.classList.contains("fixed")) {
       toggleModal();
