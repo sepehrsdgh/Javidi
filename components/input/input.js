@@ -137,7 +137,6 @@ class DecimalInputHandler extends CatchyInput {
   goToNextGroup = () => {
     this.formatValue();
     document.getElementById(this.firstInputInNextGroup)?.focus();
-    const errorDiv = document.querySelector(this.divErrorPattern);
     //must dynamic
     if (this.validationCheck()) {
       this.showError();
@@ -190,27 +189,34 @@ class DecimalInputHandler extends CatchyInput {
 
   formatValue = () => {
     const allInputs = document.querySelectorAll(this.groupIdPattern);
+    console.log(allInputs);
 
-    let integerPart = "";
-    let decimalPart = "";
+    const integerPart = [];
+    const decimalPart = [];
 
     allInputs.forEach((input) => {
       const format = input.dataset.format;
       const value = input.value.trim();
 
       if (format === InputFormatEnum.Decimal) {
-        decimalPart = value;
+        decimalPart.push(value);
       } else {
-        integerPart = value;
+        integerPart.push(value);
       }
     });
 
     const finalValue =
       this.decimalCount > 0
-        ? `${integerPart}.${decimalPart.padEnd(this.decimalCount, "0")}`
-        : integerPart;
+        ? `${integerPart.join("")}.${decimalPart
+            .join("")
+            .padEnd(this.decimalCount, "0")}`
+        : integerPart.join("");
 
     this.finalValue = finalValue;
+    if (this.validationCheck()) {
+      this.finalValue = undefined;
+      this.showError();
+    }
     return this;
   };
 
@@ -297,6 +303,29 @@ class DropDownInputHandler extends CatchyInput {
   afterSelect = () => {
     this.inputIdMaker();
     document.getElementById(this.firstInputInNextGroup)?.focus();
+  };
+
+  formatValue = () => {
+    const dynamicId = `select-input-${this.id}-0`;
+    const divElement = document.getElementById(dynamicId);
+    this.finalValue = divElement.innerHTML;
+    if (this.validationCheck()) {
+      this.showError();
+      this.finalValue = undefined;
+    }
+  };
+
+  validationCheck = () => {
+    return this.rangeValue.findIndex((ele) => ele.finalValue) < 0;
+  };
+
+  showError = () => {
+    const errorDiv = document.querySelector(this.divErrorPattern);
+    errorDiv.innerHTML = InputErrorMessageEnum.outOfRange + this.rangeValue;
+    if (errorDiv && errorDiv.classList.contains("opacity-0")) {
+      errorDiv.classList.remove("opacity-0");
+      errorDiv.classList.add("opacity-100");
+    }
   };
 }
 

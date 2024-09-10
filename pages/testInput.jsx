@@ -5,13 +5,12 @@ import { allInputs } from "../utils/inputData";
 
 const getValueForEaciInput = () => {
   const values = [];
-  for (let i = 1; i < allInputs.length; i++) {
+  for (let i = 0; i < allInputs.length; i++) {
     const input = allInputs[i];
     input.inputIdMaker();
     input.formatValue();
     values.push(input.finalValue);
   }
-  console.log(values);
 };
 
 export default function TestInput() {

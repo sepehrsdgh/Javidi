@@ -51,6 +51,7 @@ const DropdownInput = (props) => {
         {label} :
       </label>
       <div
+        id={`select-input-${id}-${i}`}
         className="w-full p-2 border border-gray-300 rounded-md bg-gray-50 cursor-pointer"
         onClick={toggleDropdown}
       >
@@ -69,6 +70,9 @@ const DropdownInput = (props) => {
           ))}
         </ul>
       )}
+      <div
+        className={`input-${id}-error opacity-0 text-red-400 font-iranBlack transition-all duration-700`}
+      ></div>
     </div>
   );
 };
