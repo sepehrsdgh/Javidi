@@ -35,6 +35,7 @@ const InputFormatEnum = {
 
 const InputErrorMessageEnum = {
   outOfRange: "خارج از محدوده ی مجاز ",
+  requiredDropDown: "انتخاب یکی از موارد ضروری می باشد.",
 };
 
 class CatchyInput {
@@ -188,8 +189,13 @@ class DecimalInputHandler extends CatchyInput {
   };
 
   formatValue = () => {
-    const allInputs = document.querySelectorAll(this.groupIdPattern);
-    console.log(allInputs);
+    const allInputs = Array.from(
+      document.querySelectorAll(this.groupIdPattern)
+    );
+    let signNumber = 1;
+    if (this.signed) {
+      signNumber = allInputs.splice(0, 1)[0].value == "-" ? -1 : 1;
+    }
 
     const integerPart = [];
     const decimalPart = [];
@@ -201,9 +207,20 @@ class DecimalInputHandler extends CatchyInput {
       if (format === InputFormatEnum.Decimal) {
         decimalPart.push(value);
       } else {
-        integerPart.push(value);
+        if (!isNaN(value) && value !== "") {
+          integerPart.push(value);
+        }
       }
     });
+
+    if (
+      integerPart.length !=
+      (this.signed ? this.inputCount - 1 : this.inputCount) - this.decimalCount
+    ) {
+      this.finalValue = undefined;
+      this.showError();
+      return;
+    }
 
     const finalValue =
       this.decimalCount > 0
@@ -212,7 +229,7 @@ class DecimalInputHandler extends CatchyInput {
             .padEnd(this.decimalCount, "0")}`
         : integerPart.join("");
 
-    this.finalValue = finalValue;
+    this.finalValue = finalValue * signNumber;
     if (this.validationCheck()) {
       this.finalValue = undefined;
       this.showError();
@@ -267,7 +284,7 @@ class DecimalInputHandler extends CatchyInput {
 
   validationCheck = () => {
     const [min, max] = this.rangeValue;
-    return this.finalValue < min || this.finalValue > max;
+    return +this.finalValue < min || +this.finalValue > max;
   };
 
   showError = () => {
@@ -302,13 +319,16 @@ class DropDownInputHandler extends CatchyInput {
 
   afterSelect = () => {
     this.inputIdMaker();
+    this.hideError();
     document.getElementById(this.firstInputInNextGroup)?.focus();
   };
 
   formatValue = () => {
     const dynamicId = `select-input-${this.id}-0`;
     const divElement = document.getElementById(dynamicId);
-    this.finalValue = divElement.innerHTML;
+    console.log(divElement);
+    this.finalValue = divElement.getAttribute("data-value");
+    console.log(this.finalValue);
     if (this.validationCheck()) {
       this.showError();
       this.finalValue = undefined;
@@ -316,15 +336,23 @@ class DropDownInputHandler extends CatchyInput {
   };
 
   validationCheck = () => {
-    return this.rangeValue.findIndex((ele) => ele.finalValue) < 0;
+    return this.rangeValue.findIndex((ele) => ele.value == this.finalValue) < 0;
   };
 
   showError = () => {
     const errorDiv = document.querySelector(this.divErrorPattern);
-    errorDiv.innerHTML = InputErrorMessageEnum.outOfRange + this.rangeValue;
+    errorDiv.innerHTML = InputErrorMessageEnum.requiredDropDown;
     if (errorDiv && errorDiv.classList.contains("opacity-0")) {
       errorDiv.classList.remove("opacity-0");
       errorDiv.classList.add("opacity-100");
+    }
+  };
+
+  hideError = () => {
+    const errorDiv = document.querySelector(this.divErrorPattern);
+    if (errorDiv && errorDiv.classList.contains("opacity-100")) {
+      errorDiv.classList.remove("opacity-100");
+      errorDiv.classList.add("opacity-0");
     }
   };
 }

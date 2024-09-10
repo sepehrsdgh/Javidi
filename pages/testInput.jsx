@@ -1,35 +1,22 @@
-import React from "react";
-import DropdownInput from "../components/input/DropDownInput";
-import DecimalInput from "../components/input/DecimalInput";
-import { allInputs } from "../utils/inputData";
-
-const getValueForEaciInput = () => {
-  const values = [];
-  for (let i = 0; i < allInputs.length; i++) {
-    const input = allInputs[i];
-    input.inputIdMaker();
-    input.formatValue();
-    values.push(input.finalValue);
-  }
-};
+import React, { useState } from "react";
+import ModalController from "../components/input/modalController";
 
 export default function TestInput() {
-  const submitHandler = (e) => {
-    e.preventDefault();
-    getValueForEaciInput();
+  const [showModal, setShowModal] = useState(false);
+  const toggleModal = () => {
+    setShowModal((currentMode) => !currentMode);
   };
   return (
-    <form onSubmit={submitHandler} className="flex flex-col gap-4 p-4">
-      <DropdownInput {...{ ...allInputs[0] }} />
-      {allInputs.slice(1, 5).map((ele, i) => (
-        <DecimalInput key={i} {...ele} />
-      ))}
+    <div className="flex items-center justify-center">
       <button
-        type="submit"
-        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+        onClick={toggleModal}
+        className="bg-gray-800 text-white px-8 py-2 text-lg"
       >
-        Submit
+        Tympanometry
       </button>
-    </form>
+      {showModal && (
+        <ModalController toggleModal={toggleModal} />
+      )}
+    </div>
   );
 }

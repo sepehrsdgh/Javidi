@@ -38,40 +38,41 @@ const DropdownInput = (props) => {
   }, []);
 
   return (
-    <div
-      ref={dropdownRef}
-      className="relative flex items-center gap-2  w-64 p-4"
-    >
+    <div ref={dropdownRef} className="relative flex flex-col gap-2">
       <label
         id={`input-${id}-${i}`}
-        className="text-lg font-semibold cursor-pointer mb-2"
+        className="text-md font-semibold cursor-pointer"
         onClick={toggleDropdown}
         tabIndex={tabIndex}
       >
-        {label} :
+        {label}
       </label>
       <div
         id={`select-input-${id}-${i}`}
-        className="w-full p-2 border border-gray-300 rounded-md bg-gray-50 cursor-pointer"
+        data-value={selectedValue}
+        className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-pointer"
         onClick={toggleDropdown}
       >
-        {selectedValue || `Select a ${label}`}
+        {(selectedValue &&
+          rangeValue.find((ele) => ele.value == selectedValue).htmlTag) ||
+          `Select a ${label}`}
       </div>
       {isDropdownOpen && (
         <ul className="absolute w-full bg-white border border-gray-300 rounded-md mt-2 z-10">
           {rangeValue.map((option, index) => (
             <li
               key={index}
-              className="p-2 hover:bg-gray-200 cursor-pointer"
-              onClick={() => handleSelect(option)}
+              value={option.value}
+              className="p-2 hover:bg-gray-200 cursor-pointer transition-colors ease-in-out duration-300"
+              onClick={() => handleSelect(option.value)}
             >
-              {option}
+              {option.htmlTag}
             </li>
           ))}
         </ul>
       )}
       <div
-        className={`input-${id}-error opacity-0 text-red-400 font-iranBlack transition-all duration-700`}
+        className={`input-${id}-error opacity-0 text-red-400 text-sm font-iranRegular transition-all duration-50`}
       ></div>
     </div>
   );

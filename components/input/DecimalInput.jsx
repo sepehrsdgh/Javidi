@@ -41,18 +41,18 @@ const DecimalInput = (props) => {
           data-format={format}
           onChange={(e) => handleInputChange(e, i, inputs, setInputs)}
           onKeyDown={(e) => handleKeyDown(e, i, inputs, setInputs)}
-          className="w-10 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-10 p-2 border border-gray-300 bg-gray-100 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       );
     }
     return inputFields;
   };
   return (
-    <div className="flex items-center space-x-2 p-4">
-      <label className="text-lg font-semibold">{label}:</label>
-      {renderInputFields()}
+    <div className="flex flex-col gap-2">
+      <label className="text-md font-semibold">{label}</label>
+      <div className="flex items-baseline space-x-2">{renderInputFields()}</div>
       <div
-        className={`input-${id}-error opacity-0 text-red-400 font-iranBlack transition-all duration-700`}
+        className={`input-${id}-error opacity-0 text-red-400 text-sm font-iranRegular transition-all duration-500`}
       ></div>
     </div>
   );
