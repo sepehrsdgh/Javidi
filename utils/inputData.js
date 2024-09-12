@@ -89,7 +89,7 @@ const input5 = new DecimalInputHandler(
 );
 
 const input6 = new DropDownInputHandler(
-  6,
+  5,
   [
     {
       htmlTag: (
@@ -125,14 +125,14 @@ const input6 = new DropDownInputHandler(
     },
   ],
   null,
-  6,
+  5,
   "Type"
 );
 const input7 = new DecimalInputHandler(
-  7,
+  6,
   [0.0, 8.0],
   /^\d$/,
-  7,
+  6,
   "ECV",
   undefined,
   3,
@@ -140,10 +140,10 @@ const input7 = new DecimalInputHandler(
   false
 );
 const input8 = new DecimalInputHandler(
-  8,
+  7,
   [0.0, 3.0],
   /^\d$/,
-  8,
+  7,
   "SC",
   undefined,
   3,
@@ -151,10 +151,10 @@ const input8 = new DecimalInputHandler(
   false
 );
 const input9 = new DecimalInputHandler(
-  9,
+  8,
   [-600, 400],
   /^\d$/,
-  9,
+  8,
   "MEP",
   undefined,
   4,
@@ -162,10 +162,10 @@ const input9 = new DecimalInputHandler(
   true
 );
 const input10 = new DecimalInputHandler(
-  10,
+  9,
   [0.0, 1.0],
   /^\d$/,
-  10,
+  9,
   "G",
   undefined,
   3,

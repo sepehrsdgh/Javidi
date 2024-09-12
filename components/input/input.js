@@ -4,6 +4,10 @@ const keyBoardEnum = {
   Delete: "Delete",
   ArrowLeft: "ArrowLeft",
   ArrowRight: "ArrowRight",
+  ArrowUp: "ArrowUp",
+  ArrowDown: "ArrowDown",
+  Escape: "Escape",
+  Tab: "Tab",
 };
 
 const InputTypeEnum = {
@@ -60,12 +64,14 @@ class CatchyInput {
   }
 
   inputIdMaker = (index = 0) => {
+    //better for refactor this code ,work with group id pattern and for find max and min do it with backspace operation
     this.finalId = `input-${this.id}-${index}`;
     this.nextInputIdInGroup = `input-${this.id}-${index + 1}`;
     this.beforeNextInputIdIngroup = `input-${this.id}-${index - 1}`;
     this.firstInputINBeforeGroup = `input-${this.id - 1}-${0}`;
     this.firstInputInNextGroup = `input-${this.id + 1}-${0}`;
     this.groupIdPattern = `[id^="input-${this.id}-"]`;
+    this.nextGroupIdPattern = `[id^="input-${this.id - 1}-"]`;
     this.divErrorPattern = `.input-${this.id}-error`;
     return this;
   };
@@ -95,10 +101,16 @@ class DecimalInputHandler extends CatchyInput {
     this.inputType = InputFormatEnum.Decimal;
   }
 
-  handleInputChange = (e, index, inputs, setInputs) => {
+  handleInputChange = (
+    e,
+    index,
+    inputs,
+    setInputs,
+    specificValue = undefined
+  ) => {
     this.hideError();
     this.inputIdMaker(index);
-    const value = e.target.value;
+    const value = specificValue || e.target.value;
 
     if (
       (this.regex.test(value) || (index == 0 && this.signed)) &&
@@ -133,6 +145,7 @@ class DecimalInputHandler extends CatchyInput {
 
   goToNextGroup = () => {
     this.formatValue();
+    console.log(this.firstInputInNextGroup, "test");
     document.getElementById(this.firstInputInNextGroup)?.focus();
     //must dynamic
     if (this.validationCheck()) {
@@ -141,7 +154,18 @@ class DecimalInputHandler extends CatchyInput {
   };
 
   goToBeforeGroup = () => {
-    document.getElementById(this.firstInputINBeforeGroup)?.focus();
+    const allInputs = Array.from(
+      document.querySelectorAll(this.nextGroupIdPattern)
+    );
+    const maxInput = allInputs.reduce((maxEl, el) => {
+      const idParts = el.id.split("-");
+      const currentNumber = parseInt(idParts[2], 10);
+      if (!maxEl || currentNumber > parseInt(maxEl.id.split("-")[2], 10)) {
+        return el;
+      }
+      return maxEl;
+    }, null);
+    maxInput?.focus();
   };
 
   goToBeforeInput = () => {
@@ -154,6 +178,21 @@ class DecimalInputHandler extends CatchyInput {
     const newInputs = [...inputs];
     const format = e.target.dataset.format;
     const { key } = e;
+    if (e.key >= "0" && e.key <= "9" && e.target.value > 0) {
+      //this section need refactor
+      const newInputs = [...inputs];
+      newInputs[index] = e.key;
+      setInputs(newInputs);
+
+      if (e.target.value !== "." && index < this.inputCount - 1) {
+        this.goToNextInput();
+      }
+
+      if (e.target.value !== "." && index === this.inputCount - 1) {
+        this.goToNextGroup();
+      }
+    }
+
     if (key === keyBoardEnum.Enter) {
       e.preventDefault();
       if (e.target.value == "" && format == InputFormatEnum.Decimal) {
@@ -169,7 +208,7 @@ class DecimalInputHandler extends CatchyInput {
 
       if (key === keyBoardEnum.Backspace && index > 0) {
         this.goToBeforeInput();
-      } else if (index === 0) {
+      } else if (index === 0 && key === keyBoardEnum.Backspace) {
         this.goToBeforeGroup();
       }
     }
@@ -320,9 +359,9 @@ class DropDownInputHandler extends CatchyInput {
   };
 
   formatValue = () => {
-    const dynamicId = `select-input-${this.id}-0`;
+    const dynamicId = `select-input-${this.id}`;
     const divElement = document.getElementById(dynamicId);
-    this.finalValue = divElement.getAttribute("data-value");
+    this.finalValue = divElement?.getAttribute("data-value");
     if (this.validationCheck()) {
       this.showError();
       this.finalValue = undefined;
@@ -351,4 +390,4 @@ class DropDownInputHandler extends CatchyInput {
   };
 }
 
-module.exports = { DecimalInputHandler, DropDownInputHandler };
+module.exports = { DecimalInputHandler, DropDownInputHandler, keyBoardEnum };

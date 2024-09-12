@@ -12,9 +12,9 @@ const getValueForEaciInput = () => {
     input.inputIdMaker();
     input.formatValue();
     if (i < 5) {
-      left.push(input.finalValue);
-    } else {
       right.push(input.finalValue);
+    } else {
+      left.push(input.finalValue);
     }
   }
   console.log({ left, right });
@@ -38,14 +38,14 @@ function Tympanometry({ toggleModal }) {
       </div>
       <div className="flex items-stretch gap-4">
         <div className="flex relative flex-col w-full gap-4 bg-white p-8 shadow-md rounded-sm min-w-96">
-          <div className="absolute -top-8 left-1/2 text-lg font-bold">L</div>
+          <div className="absolute -top-8 left-1/2 text-lg font-bold">R</div>
           <DropdownInput {...{ ...allInputs[0] }} />
           {allInputs.slice(1, 5).map((ele, i) => (
             <DecimalInput key={i} {...ele} />
           ))}
         </div>
         <div className="flex flex-col relative w-full gap-4 bg-white p-8 shadow-md rounded-sm min-w-96">
-          <div className="absolute -top-8 left-1/2 text-lg font-bold">R</div>
+          <div className="absolute -top-8 left-1/2 text-lg font-bold">L</div>
           <DropdownInput {...{ ...allInputs[5] }} />
           {allInputs.slice(6, 10).map((ele, i) => (
             <DecimalInput key={i} {...ele} />

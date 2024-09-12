@@ -37,6 +37,7 @@ const DecimalInput = (props) => {
           id={`input-${id}-${i}`}
           type={type}
           maxLength={maxLength}
+          autoComplete="off"
           value={inputs[i]}
           data-format={format}
           onChange={(e) => handleInputChange(e, i, inputs, setInputs)}
